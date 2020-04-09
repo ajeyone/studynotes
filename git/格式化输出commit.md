@@ -1,18 +1,9 @@
 # git log format
-默认git log 出来的格式并不是特别直观，很多时候想要更简便的输出更多或者更少的信息，这里列出几个git log的format。
-可以根据自己的需要定制。
-
-git log命令可一接受一个--pretty选项，来确定输出的格式.
-
-比如 ：
-
-如果我们只想输出hash.
 
 ```sh
 git log --pretty=format:"%h" 
 ```
 
-详细 命令 ：
 |格式字符串|含义|
 |---|---|
 | %H | commit hash |
@@ -52,7 +43,7 @@ git log --pretty=format:"%h"
 | %Cgreen | 切换到绿色 |
 | %Cblue | 切换到蓝色 |
 | %Creset | 重设颜色 |
-| %C |...): 制定颜色, as described in color.branch.* config option |
+| %C(...) | 指定颜色, as described in color.branch.* config option |
 | %m | left, right or boundary mark |
 | %n | 换行 |
 | %% |a raw % |
