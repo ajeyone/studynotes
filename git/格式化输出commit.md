@@ -1,3 +1,19 @@
+# 常用单行格式
+
+命令：
+
+```shell
+git log --pretty=format:"%H | %ai | %an | %cn | %s"
+```
+
+输出示例：
+
+```
+01234567890123456789... | 2020-04-20 15:27:45 +0800 | ajeyone | ajeyone | 标题
+```
+
+
+
 # git log format
 
 ```sh
