@@ -1,3 +1,8 @@
+## 简单执行命令
+```python
+os.system('ls -al')
+```
+
 ## 使用 subprocess 执行命令
 
 ```python

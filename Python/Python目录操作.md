@@ -3,6 +3,11 @@
 os.path.join('path/to/a/dir', '*')
 ```
 
+## 获得绝对路径
+```python
+os.path.abspath('.')
+```
+
 ## 文件或目录是否存在
 ```python
 if os.path.exists(dir):

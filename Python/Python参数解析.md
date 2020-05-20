@@ -1,4 +1,12 @@
-## argparse
+## 原生方法
+```python
+import sys
+# 至少有 1 个参数就是执行的 py 文件
+print('参数个数为:', len(sys.argv))
+print('参数列表:', sys.argv)
+```
+
+## 复杂参数解析 argparse
 ```python
 import argparse
 parser = argparse.ArgumentParser(description='this is a good tool.')

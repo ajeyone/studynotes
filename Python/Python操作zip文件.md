@@ -22,3 +22,12 @@ for h_file in h_files:
         print('cmd:', cmd)
         print('run result: ', os.system(cmd))
 ```
+
+## 解压 apk 文件中的特定文件
+```python
+def extractAssetFile(apkPath):
+    with zipfile.ZipFile(apkPath, 'r') as apkzip:
+        # 第一个路径是 zip 文件内部的路径，第二个路径是文件系统路径，注意第二个路径+第一个路径才是最终解压后的文件路径
+        # 解压后文件路径为：app/src/main/assets/app.config
+        apkzip.extract('assets/app.config', 'app/src/main/')
+```
