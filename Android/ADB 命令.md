@@ -35,6 +35,14 @@ adb install -r app.apk
 # -r 表示覆盖安装，如果没安装过也可以；如果已安装，不加 -r 会提示失败。
 ```
 
+抓 Log 保存到文件
+
+```sh
+set OUT=%1
+if "%OUT%" == "" set OUT=log.txt
+adb logcat -v threadtime > %OUT% 2>&1
+```
+
 
 
 ## 针对应用的命令
@@ -87,5 +95,36 @@ adb shell getprop ro.build.version.sdk
 ```shell
 adb shell dumpsys package > dump.txt
 adb shell dumpsys package | grep <anything>
+```
+
+查询所有系统属性（ROM版本号、厂家、品牌等）
+
+```sh
+adb shell cat /system/build.prop
+```
+
+查询最顶层 Activity
+
+```sh
+# windows
+adb shell dumpsys activity | findstr "mFocusedActivity"
+# mac/linux
+adb shell dumpsys activity | grep "mFocusedActivity"
+```
+
+
+
+## ROM 相关
+
+root 设备，只有在模拟器或者开发版 ROM 有效
+
+```sh
+adb root
+```
+
+开启系统目录写入权限
+
+```sh
+adb remount
 ```
 
