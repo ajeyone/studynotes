@@ -25,7 +25,7 @@ os.path.isfile(path)
 import glob
 dir = 'path/to/a/dir/*'
 # 发生错误不返回错误值，只是遍历为空
-filenames = glob.iglob(dir)
+filenames = glob.glob(dir)
 for filename in filenames:
     print('filename:', filename)
 ```
@@ -38,7 +38,14 @@ for h_file in h_files:
     print(h_file)
 ```
 
+## glob.glob() 与 glob.iglob() 的区别
+
+`glob`：返回的是 list，可以用 len() 方法判断数量
+
+`iglob`：返回的是 iterator，表示流数据，没法在不读取所有数据的前提下获得数量
+
 ## 展开用户目录
+
 如果路径第一个字符是"~"，则按用户目录规则展开，如果不是则原样返回，可以用来先处理一下路径，再传给其他路径方法
 ```python
 path = os.path.expanduser(path)

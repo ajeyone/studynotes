@@ -55,7 +55,26 @@ if __name__ == "__main__":
 ''.split(' ') # [''] 有参数时结果是只有一个空字符串的数组
 ```
 
+## 字符串查找
+
+`find()` 方法找不到返回 -1
+
+```python
+index = s.find(to_find, start_position)
+```
+
+## 正则表达式
+
+```python
+import re
+re.match(pattern, string) # 整个match才返回 match 对象
+re.search(pattern, string) # 搜索，返回第一个
+```
+
+
+
 ## 闭区间随机整数
+
 ```python
 import random
 x = random.randint(minValue, maxValue)
