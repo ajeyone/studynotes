@@ -88,9 +88,9 @@ fi # if 的回文词作为结束标识
 
 ```sh
 if condition; then
-	statement(s)
+    statement(s)
 else
-	statement(s)
+    statement(s)
 fi
 ```
 
@@ -181,4 +181,93 @@ if [1 == 1 ]; then echo yes; else echo no; fi
 if [ 1 == 1 ]; then echo yes; else echo no; fi
 yes
 ```
+
+### 文件相关
+
+| 选 项                   | 作 用                                                        |
+| ----------------------- | ------------------------------------------------------------ |
+| -b filename             | 判断文件是否存在，并且是否为块设备文件。                     |
+| -c filename             | 判断文件是否存在，并且是否为字符设备文件。                   |
+| -d filename             | 判断文件是否存在，并且是否为目录文件。                       |
+| -e filename             | 判断文件是否存在。                                           |
+| -f filename             | 判断文件是否存在，井且是否为普通文件。                       |
+| -L filename             | 判断文件是否存在，并且是否为符号链接文件。                   |
+| -p filename             | 判断文件是否存在，并且是否为管道文件。                       |
+| -s filename             | 判断文件是否存在，并且是否为非空。                           |
+| -S filename             | 判断该文件是否存在，并且是否为套接字文件。                   |
+| -r filename             | 判断文件是否存在，并且是否拥有读权限。                       |
+| -w filename             | 判断文件是否存在，并且是否拥有写权限。                       |
+| -x filename             | 判断文件是否存在，并且是否拥有执行权限。                     |
+| -u filename             | 判断文件是否存在，并且是否拥有 SUID 权限。                   |
+| -g filename             | 判断文件是否存在，并且是否拥有 SGID 权限。                   |
+| -k filename             | 判断该文件是否存在，并且是否拥有 SBIT 权限。                 |
+| filename1 -nt filename2 | 判断 filename1 的修改时间是否比 filename2 的新。             |
+| filename -ot filename2  | 判断 filename1 的修改时间是否比 filename2 的旧。             |
+| filename1 -ef filename2 | 判断 filename1 是否和 filename2 的 inode 号一致，可以理解为两个文件是否为同一个文件。这个判断用于判断硬链接是很好的方法 |
+
+### 数值比较
+
+| 选 项         | 作 用                          |
+| ------------- | ------------------------------ |
+| num1 -eq num2 | 判断 num1 是否和 num2 相等。   |
+| num1 -ne num2 | 判断 num1 是否和 num2 不相等。 |
+| num1 -gt num2 | 判断 num1 是否大于 num2 。     |
+| num1 -lt num2 | 判断 num1 是否小于 num2。      |
+| num1 -ge num2 | 判断 num1 是否大于等于 num2。  |
+| num1 -le num2 | 判断 num1 是否小于等于 num2。  |
+
+### 字符串比较
+
+| 选 项                    | 作 用                                                        |
+| ------------------------ | ------------------------------------------------------------ |
+| -z str                   | 判断字符串 str 是否为空。                                    |
+| -n str                   | 判断宇符串 str 是否为非空。                                  |
+| str1 = str2 str1 == str2 | `=`和`==`是等价的，都用来判断 str1 是否和 str2 相等。        |
+| str1 != str2             | 判断 str1 是否和 str2 不相等。                               |
+| str1 \> str2             | 判断 str1 是否大于 str2。`\>`是`>`的转义字符，这样写是为了防止`>`被误认为成重定向运算符。 |
+| str1 \< str2             | 判断 str1 是否小于 str2。同样，`\<`也是转义字符。            |
+
+### 逻辑运算
+
+| 选 项                      | 作 用                                                        |
+| -------------------------- | ------------------------------------------------------------ |
+| expression1 -a expression  | 逻辑与，表达式 expression1 和 expression2 都成立，最终的结果才是成立的。 |
+| expression1 -o expression2 | 逻辑或，表达式 expression1 和 expression2 有一个成立，最终的结果就成立。 |
+| !expression                | 逻辑非，对 expression 进行取反。                             |
+
+## [[]]
+
+注意 `[[]]` 是 shell 关键字而不是命令，也是用来进行条件判断的，使用起来更加方便和灵活，可以替代 `test`。
+
+```sh
+[[ expression ]]
+```
+
+ `[[]]` 由于是关键字，因此没有传递参数的空格问题。
+
+```sh
+[[ -z $notExist ]]
+```
+
+但 `expression` 两侧的空格是不能省略的。
+
+ `[[]]` 支持逻辑运算符，也就是可以直接把逻辑运算符写在里面，而不用像 `test` 那样写两个 `test` 命令。
+
+```sh
+[[ -z $str1 || -z $str2 ]]
+```
+
+ `[[]]` 支持正则表达式。
+
+```sh
+[[ str =~ regex ]]
+```
+
+正则表达式示例，判断字符串是否是手机号：
+
+```sh
+[[ $str =~ ^1[0-9]{10}$]]
+```
+
+
 
