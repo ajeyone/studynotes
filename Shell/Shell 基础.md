@@ -2,7 +2,7 @@
 
 ## 变量
 
-赋值时不要带 `$` 符号，使用时需要带 `$`符号。没有定义也可以使用，不会出错，按空字符串处理。
+赋值时不要带 `$` 符号，使用时需要带 `$` 符号。没有定义也可以使用，不会出错，按空字符串处理。
 
 ```sh
 localName=xyz
@@ -137,9 +137,9 @@ fi
 紧跟 `if` 语句的 `condition` 实际上是就是普通的 shell 命令，这个命令的退出值就是 if 语句判断的布尔值。在 shell 编程中，这个退出值是一个整数，而整数和布尔值的映射并不是 0 对应 false，非 0 对应 true，与其他编程语言完全相反，返回 0 代表 true，返回 1 代表 false。
 
 | shell 命令返回值 | 映射为 if 使用的布尔值 |
-| ---------------- | ---------------------- |
-| 0                | true                   |
-| 非 0             | false                  |
+| :---------------: | :--------------------: |
+|                0 | true                   |
+|             非 0 | false                  |
 
 通常情况下，一个程序返回 0 表示正常退出没有异常。这也是为什么通常我们在 C 代码的 `main` 函数中最后要写 `return 0;` 。
 
@@ -269,5 +269,188 @@ yes
 [[ $str =~ ^1[0-9]{10}$]]
 ```
 
+## 脚本参数
 
+### 基本使用
+
+shell 中的参数都是没有名称的，需要使用固定的以 `$` 开头的标识符访问。
+
+```sh
+$0 # 表示脚本文件名
+$N # 表示第N个参数
+$# # 表示参数数量，不包括 $0
+```
+
+例，创建一个 test.sh 文件：
+
+```sh
+#!/bin/bash
+echo "Shell 传递参数实例！共有参数 $# 个！";
+echo "执行的文件名：$0";
+echo "第一个参数为：$1";
+echo "第二个参数为：$2";
+echo "第三个参数为：$3";
+```
+
+然后执行：
+
+```sh
+./test.sh AA BB CC
+```
+
+输出：
+
+```
+Shell 传递参数实例！共有参数 3 个！
+执行的文件名：./test.sh
+第一个参数为：AA
+第二个参数为：BB
+第三个参数为：CC
+```
+
+### 遍历参数
+
+在 shell 中既然没有参数列表，那么是否可以像 C 语言可变参数 `int sum(int count, ...)` ，或者像 Java 可变参数 `int sum(int... numbers)` 那样遍历访问呢？
+
+当然可以，我们新建一个脚本文件 `every.sh`，遍历输出所有参数。
+
+```sh
+# every.sh
+echo "$0: $#: $@"
+for i in "$@"; do
+    echo "  > {$i}" # 加上 {} 以便检查参数值的边界
+done
+```
+
+执行 `every.sh` 文件，并传递一些参数。
+
+```sh
+$ ./every.sh AA BB CC
+```
+
+输出：
+
+```sh
+./every.sh: 3: AA BB CC
+  > {AA}
+  > {BB}
+  > {CC}
+```
+
+### 整体传递
+
+使用 `$*` 或 `$@` 可以整体将所有参数传递到另一个命令（函数）中，上一节的 `every.sh` 中已经使用了 `$@` 来遍历参数。而 `$*` 的特殊之处在于，在双引号中使用会将所有参数“平铺”为一个字符串。
+
+将 `every.sh` 中的 `$@` 改为 `$*`：
+
+```sh
+#!/bin/zsh
+echo "$0: $#: $*"
+for i in "$*"; do
+    echo "  > {$i}"
+done
+```
+
+再次传入参数得到：
+
+```sh
+./every.sh: 3: AA BB CC
+  > {AA BB CC}
+```
+
+第一行与之前 `$@` 的版本相同，而接下来只打印了一个将所有参数拼在一起的字符串，也就是说参数被合并为一个单独的字符串了。
+
+整体传递参数最常见的用法是透传参数，即在一个脚本内将所有参数原封不动地传递给另一个脚本，我们举一个复杂的例子，新创建一个脚本 `test.sh` 放在 `every.sh` 的同级目录内，在 `test.sh` 内调用 `every.sh` 脚本。
+
+```sh
+# test.sh
+./every.sh $*
+./every.sh $@
+./every.sh "$*"
+./every.sh "$@"
+./every.sh pre $* post
+./every.sh pre $@ post
+./every.sh "pre $* post"
+./every.sh "pre $@ post"
+```
+
+运行 `test.sh` 脚本：
+
+```sh
+$ ./test.sh AA BB CC
+```
+
+得到结果(加了一些额外的输出)：
+
+```sh
+run every.sh with: $*
+  ./every.sh: 3: AA BB CC
+    > {AA}
+    > {BB}
+    > {CC}
+
+run every.sh with: $@
+  ./every.sh: 3: AA BB CC
+    > {AA}
+    > {BB}
+    > {CC}
+
+run every.sh with: "$*"
+  ./every.sh: 1: AA BB CC
+    > {AA BB CC}
+
+run every.sh with: "$@"
+  ./every.sh: 3: AA BB CC
+    > {AA}
+    > {BB}
+    > {CC}
+
+run every.sh with: pre $* post
+  ./every.sh: 5: pre AA BB CC post
+    > {pre}
+    > {AA}
+    > {BB}
+    > {CC}
+    > {post}
+
+run every.sh with: pre $@ post
+  ./every.sh: 5: pre AA BB CC post
+    > {pre}
+    > {AA}
+    > {BB}
+    > {CC}
+    > {post}
+
+run every.sh with: "pre $* post"
+  ./every.sh: 1: pre AA BB CC post
+    > {pre AA BB CC post}
+
+run every.sh with "pre $@ post"
+  ./every.sh: 3: pre AA BB CC post
+    > {pre AA}
+    > {BB}
+    > {CC post}
+```
+
+可见，如果只是直接透传所有参数，直接使用不带引号的 `$@` 和 `$*` 都是可以的，如果带了引号，那么应该使用 `"$@"`。如果要额外添加参数，根据最后一个例子的奇怪输出，最好不要把所有参数写到一个双引号内，而是要分开写。
+
+#### 另一种输出所有参数的方法
+
+```sh
+function every() {
+    local params=""
+    for i in $*; do
+        params="${params}$i,"
+    done
+    last=$((${#params}-1))
+    echo "$0 [$#] (${params:0:${last}})"
+}
+every AA BB CC
+```
+
+输出类似 Python 语言风格的参数列表
+
+```sh
+every [3] (AA,BB,CC)
+```
 
