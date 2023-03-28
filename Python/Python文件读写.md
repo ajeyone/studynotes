@@ -1,8 +1,10 @@
+## with
 
-## 使用 with 简化异常处理
+使用 with 语句可以省略文件打开关闭相关的繁琐的 try-finally 语句，文件在退出 with 作用域后自动 close。
+
 ```python
-with open('file_name','r') as f:
-    r=f.read()
+with open('file_name', 'r') as f:
+    r = f.read()
 ```
 
 ## open
