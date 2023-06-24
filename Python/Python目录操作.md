@@ -71,7 +71,14 @@ import glob
 h_files = glob.glob('Rememtext/**/*.h', recursive=True)
 for h_file in h_files:
     print(h_file)
+# 输出示例
+# Rememtext/AppDelegate.h
+# Rememtext/Views/BlockManager.h
 ```
+
+pattern 参数中的 `**/*.h` 表示 0 ~ n 个任意目录，可以匹配当前目录下的 "a.h"，也可以匹配很多层目录的 "a/b/c/d.h"。
+
+返回的 list 中的路径字符串与传入的参数相关，如果传入参数是相对路径，返回的也都是相对路径；如果传入参数是绝对路径，返回的也都是相对路径。无论是哪种路径，都是可以直接传给 `open()` 方法的正确的路径。
 
 ### glob.glob() 与 glob.iglob() 的区别
 
